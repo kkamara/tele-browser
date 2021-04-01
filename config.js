@@ -16,6 +16,4 @@ const appConfig = {
     appLocale: process.env.APP_LOCALE,
 };
 
-module.exports = {
-    appConfig
-};
+module.exports = { appConfig };
