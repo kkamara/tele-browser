@@ -1,4 +1,5 @@
 const { helpersConfig } = require("./config");
+const { openDb } = require("./db");
 
 const cookieParser = require("cookie-parser");
 const express = require("express");
