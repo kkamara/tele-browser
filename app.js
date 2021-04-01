@@ -1,5 +1,13 @@
 const { appConfig } = require("./config");
-const { openDb } = require("./db");
+const { 
+    validate, 
+    get, 
+    save, 
+    getAll,
+    del,
+    update
+} = require("./models/item");
+const slugify = require('slugify');
 
 const cookieParser = require("cookie-parser");
 const sanitize = require('sanitize');
@@ -40,6 +48,69 @@ if (appConfig.appDebug === true) {
 
 // routes
 router = express.Router();
+
+router.post('/items', async (req, res) => {
+    const errors = await validate(req.body);
+    if (errors.length) {
+        res.statusCode = 401;
+        return res.send(JSON.stringify({
+            errors,
+            message: 'Unsuccessful',
+        }));
+    }
+
+    const name_slug = slugify(req.body.name);
+    const item = await save({
+        name_slug,
+        name: req.body.name,
+    });
+
+    if (item === false) {
+        res.statusCode = 500;
+        res.send(JSON.stringify({
+            error: 'Error encountered when saving resource.'
+        }));
+    }
+
+    return res.send(JSON.stringify(item));
+});
+
+router.get('/items', async (req, res) => {
+    const data = await getAll();
+    return res.send(JSON.stringify(data));
+});
+
+router.patch('/items/:slug', async (req, res) => {
+    const item = await get(req.params.slug);
+    if (!item) {
+        res.statusCode = 401;
+        return res.send(JSON.stringify({
+            error: 'Resource not found.',
+            message: 'Unsuccessful',
+        }));
+    }
+
+    const errors = await validate(req.body);
+    if (errors.length) {
+        res.statusCode = 401;
+        return res.send(JSON.stringify({
+            errors,
+            message: 'Unsuccessful',
+        }));
+    }
+
+    const newItem = await update({
+        name: req.body.name,
+        name_slug: slugify(req.body.name),
+    }, req.params.name);
+
+    return res.send(JSON.stringify(newItem));
+});
+
+router.delete('/items/:slug', async (req, res) => {
+    await del(req.params.slug);
+    return res.send(JSON.stringify({ message: 'Success' }));
+});
 
 app.use('/api', router);
 
