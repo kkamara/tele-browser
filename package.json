@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "start": "concurrently \"node app.js\" \"cd frontend && PORT=3001 npm start\"",
     "test": "mocha tests"
   },
   "repository": {
