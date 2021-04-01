@@ -39,7 +39,9 @@ if (appConfig.appDebug === true) {
 }
 
 // routes
-// app.get("/", middleware.csrfProtection, middleware.render("pages/index"));
+router = express.Router();
+
+app.use('/api', router);
 
 if (appConfig.nodeEnv === "production") {
     app.listen(80);
