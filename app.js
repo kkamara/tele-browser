@@ -16,11 +16,9 @@ app.use(cors());
 if (helpersConfig.nodeEnv === "production") {
     app.listen(80);
 } else {
-    const open = require("open");
     const port = "3000";
     app.listen(port, () => {
         const url = `http://127.0.0.1:${port}`;
         console.log(`Listening on ${url}`);
-        open(url);
     });
 }
