@@ -1,4 +1,4 @@
-const { helpersConfig } = require("./config");
+const { appConfig } = require("./config");
 const { openDb } = require("./db");
 
 const cookieParser = require("cookie-parser");
@@ -14,7 +14,7 @@ app.use(cors());
 // routes
 // app.get("/", middleware.csrfProtection, middleware.render("pages/index"));
 
-if (helpersConfig.nodeEnv === "production") {
+if (appConfig.nodeEnv === "production") {
     app.listen(80);
 } else {
     const port = "3000";

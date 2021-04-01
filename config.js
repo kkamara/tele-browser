@@ -4,7 +4,7 @@ if (parseEnvFile.error) {
     throw parseEnvFile.error;
 }
 
-const helpersConfig = {
+const appConfig = {
     asset: path => {
         if (path[0] === "/") return `${path}`;
         return `/${path}`;
@@ -17,5 +17,5 @@ const helpersConfig = {
 };
 
 module.exports = {
-    helpersConfig
+    appConfig
 };
