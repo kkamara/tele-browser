@@ -6,8 +6,11 @@ const openDb = async () => {
     const db = await open({
         filename: path.join(process.cwd(),'telebrowser.db'),
         driver: sqlite3.cached.Database
-    });
-    await db.migrate({ force: true, });
+    }).catch(err => console.log(err));
+
+    await db.migrate()
+        .catch(err => console.log(err));
+    
     return db;
 };
 
