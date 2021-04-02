@@ -22,3 +22,11 @@ button:focus {
 .pencil-alt-icon {
     color:   #FFBF00;
 }
+
+.check-circle-icon {
+    color: green;
+}
+
+.close-modal-btn {
+    color: #D1D5DB;
+}
