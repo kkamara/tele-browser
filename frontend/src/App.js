@@ -1,16 +1,35 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
-import { APP_URL } from './constants';
+import API_ROUTES from './api-routes';
 import Loader from './components/Loader';
+import Items from './components/Items';
 
+/** @func App */
 function App() {
+    const [data, setData] = useState(null);
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(true);
 
     const bc = new BroadcastChannel('test_channel');
     bc.onmessage = function (ev) { console.log(ev); }
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const res = await axios.get(
+                    `${API_ROUTES.ITEM.ROOT}${API_ROUTES.ITEM.READ}`
+                )
+                setData(res.data);
+                setLoading(false);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        fetchData();
+    }, []);
 
     /** 
      * @const closeBCConnection 
@@ -32,10 +51,16 @@ function App() {
         console.log('in item submit handler');
     }
 
-    /** render */
+    /** 
+     * r e n d e r    a p p
+     */
+
+    if (true === loading) {
+        return <Loader />;
+    }
+
     return (
         <Fragment>
-            <Loader />
             <button 
                 onClick={e => closeBCConnection(e, bc)}
                 className="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
@@ -51,6 +76,8 @@ function App() {
                         Name:
                     </label>
                     <input 
+                        minLength={3}
+                        maxLength={20}
                         name="name" 
                         type="text" 
                         className="rounded text-pink-500 ml-10"
@@ -65,20 +92,7 @@ function App() {
                     </button>
                 </div>
             </form>
-            <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
-                <div className="p-8">
-                    <div 
-                        className="uppercase tracking-wide text-sm text-indigo-500 font-semibold grid grid-cols-10"
-                    >
-                        <div className="col-span-8" >Case study</div>
-                        <div className="col-end">
-                            <button>
-                                <FontAwesomeIcon size="2x" className="trash-alt-icon" icon={faTrashAlt} />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Items items={data} />
         </Fragment>
     );
 }
