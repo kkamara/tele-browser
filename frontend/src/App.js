@@ -48,6 +48,7 @@ function App() {
     * @param {BroadcastChannel} bc
     */
     const handleItemSubmit = (e, bc) => {
+        e.preventDefault();
         console.log('in item submit handler');
     }
 
