@@ -85,12 +85,15 @@ const getAll = async () => {
 const update = async (item, original_name_slug) => {
     const db = await openDb();
     try {
-        await db.run(
+        const res = await db.run(
             'UPDATE items SET name = ?, name_slug = ? WHERE name_slug = ?',
             item.name,
             item.name_slug,
             original_name_slug
         );
+        if (res.changes !== 1) {
+            return false;
+        }
         return item;
     } catch (err) { 
         console.log(err);

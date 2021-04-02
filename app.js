@@ -103,6 +103,13 @@ router.patch('/items/:slug', async (req, res) => {
         name: req.body.name,
         name_slug: slugify(req.body.name),
     }, req.params.slug);
+    
+    if (false === newItem) {
+        res.statusCode = 500;
+        res.send(JSON.stringify({
+            error: 'Error encountered when saving resource.'
+        }));
+    }
 
     return res.send(JSON.stringify(newItem));
 });
