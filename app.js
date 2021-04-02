@@ -117,7 +117,7 @@ router.patch('/items/:slug', async (req, res) => {
     
     if (false === newItem) {
         res.statusCode = 500;
-        res.send(JSON.stringify({
+        return res.send(JSON.stringify({
             error: 'Error encountered when saving resource.'
         }));
     }
