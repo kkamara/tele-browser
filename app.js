@@ -5,7 +5,8 @@ const {
     save, 
     getAll,
     del,
-    update
+    update,
+    exists,
 } = require("./models/item");
 const slugify = require('slugify');
 
@@ -86,6 +87,16 @@ router.patch('/items/:slug', async (req, res) => {
         res.statusCode = 401;
         return res.send(JSON.stringify({
             error: 'Resource not found.',
+            message: 'Unsuccessful',
+        }));
+    }
+
+    const newSlug = slugify(req.body.name);
+    const itemExists = await exists(newSlug);
+    if (itemExists) {
+        res.statusCode = 401;
+        return res.send(JSON.stringify({
+            error: `Item '${req.body.name}' already exists.`,
             message: 'Unsuccessful',
         }));
     }

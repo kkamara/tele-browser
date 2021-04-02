@@ -2,8 +2,23 @@ const { openDb } = require("../db");
 const slugify = require('slugify');
 
 /** 
+ * @const {function} exists
+ * @param {string} name_slug
+ * @return {item|false}
+ */
+ const exists = async name_slug => {
+    const db = await openDb();
+    const res = await db.get(
+        'SELECT * FROM items WHERE name_slug = ?',
+        slugify(name_slug)
+    );
+    return res ? res : false;
+}
+
+/** 
  * @const {function} validate
- * @param {string} item
+ * @param {item} item
+ * @return {string[]}
  */
 const validate = async item => {
     const db = await openDb();
@@ -19,11 +34,7 @@ const validate = async item => {
         errors.push('The name field length must be less than 20 characters.');
     } else {
         try {
-            const exists = await db.get(
-                'SELECT * FROM items WHERE name_slug = ?',
-                slugify(item.name)
-            );
-
+            await exists(item.name_slug);
             if (exists) {
                 errors.push('The name field already exists.');
             }
@@ -102,6 +113,7 @@ const update = async (item, original_name_slug) => {
 };
 
 module.exports = {
+    exists,
     validate,
     get,
     save,
