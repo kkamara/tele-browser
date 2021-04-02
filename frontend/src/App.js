@@ -1,4 +1,8 @@
-import { Fragment, useState, useEffect } from 'react';
+import { 
+    Fragment,
+    useState,
+    useEffect,
+} from 'react';
 import axios from 'axios';
 
 import API_ROUTES from './api-routes';
@@ -12,9 +16,14 @@ function App() {
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(true);
 
-    /** @const {BroadcastChannel} bc */
+    /** 
+     * @const {BroadcastChannel} bc
+     * @param {MessageEvent} event
+     */
     const bc = new BroadcastChannel('test_channel');
-    bc.onmessage = function (ev) { console.log(ev); }
+    bc.onmessage = function (event) { 
+        setData(event.data);
+    }
 
     useEffect(() => {
         async function fetchData() {
@@ -52,7 +61,11 @@ function App() {
                 `${API_ROUTES.ITEM.ROOT}${API_ROUTES.ITEM.CREATE}`,
                 { name }
             );
-            setData(data => [ ...data, res.data ]);
+            setData(data => {
+                const newData = [ ...data, res.data ];
+                bc.postMessage(newData);
+                return newData;
+            });
             setName("");
         } catch (err) {
             console.log(err);
@@ -81,7 +94,6 @@ function App() {
                 name={name}
                 setName={setName}
                 handleItemSubmit={handleItemSubmit}
-                broadcastChannel={bc}
             />
             <Items 
                 items={data} 

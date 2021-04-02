@@ -69,8 +69,9 @@ const Items = ({
                         data[key].name = res.data.name;
                     }
                 }
-
-                return [ ...data ];
+                const newData = [ ...data ];
+                broadcastChannel.postMessage(newData);
+                return newData;
             });
             setEditItemModalOpen(false);
             setItemEditing(null);
@@ -105,12 +106,16 @@ const Items = ({
                 setItemEditing(null);
                 return;
             }
-            setItems(data => data.filter(({ name_slug: slug }) => {
-                if (name_slug === slug) {
-                    return false;
-                }
-                return true;
-            }));
+            setItems(data => {
+                const newData = data.filter(({ name_slug: slug }) => {
+                    if (name_slug === slug) {
+                        return false;
+                    }
+                    return true;
+                });
+                broadcastChannel.postMessage(newData);
+                return newData;
+            });
             setItemDeleting(null);
             setDelItemModalOpen(false);
         } catch (err) {
@@ -175,7 +180,6 @@ const Items = ({
                 delItemModalOpen={delItemModalOpen}
                 handleDeleteModalClose={handleDeleteModalClose}
                 itemDeleting={itemDeleting}
-                broadcastChannel={broadcastChannel}
                 handleDelSubmit={handleDelSubmit}
                 setDeleteChoice={setDeleteChoice}
             />
