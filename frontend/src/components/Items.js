@@ -7,14 +7,28 @@ import {
     faCheckCircle
 } from '@fortawesome/free-solid-svg-icons';
 
-const customStyles = {
+/** @const {object} modalEditItemStyles */
+const modalEditItemStyles = {
     content : {
-      top                   : '50%',
-      left                  : '50%',
-      right                 : 'auto',
-      bottom                : 'auto',
-      marginRight           : '-50%',
-      transform             : 'translate(-50%, -50%)'
+        top:'50%',
+        left:'50%',
+        right:'auto',
+        bottom:'auto',
+        marginRight:'-50%',
+        transform:'translate(-50%, -50%)'
+    }
+};
+
+/** @const {object} modalDelItemStyles */
+const modalDelItemStyles = {
+    content : {
+        width: 460,
+        top:'50%',
+        left:'50%',
+        right:'auto',
+        bottom:'auto',
+        marginRight:'-50%',
+        transform:'translate(-50%, -50%)'
     }
 };
 
@@ -22,16 +36,21 @@ Modal.setAppElement('#root');
 
 /** @const {func} Items */
 const Items = ({ items, broadcastChannel }) => {
-    const [modelOpen, setModelOpen] = useState(false);
+    const [editItemModalOpen, setEditItemModalOpen] = useState(false);
+    const [delItemModalOpen, setDelItemModalOpen] = useState(false);
     const [itemEditing, setItemEditing] = useState(null);
+    const [itemDeleting, setItemDeleting] = useState(null);
 
     /** 
     * @const handleDeleteItem 
     * @param {event} e
     * @param {BroadcastChannel} bc
+    * @param {item} item
     */
-    const handleDeleteItem = (e, bc) => {
+    const handleDeleteItem = (e, bc, item) => {
         console.log('in item delete handler');
+        setItemDeleting(item);
+        setDelItemModalOpen(true);
     }
 
     /** 
@@ -43,13 +62,20 @@ const Items = ({ items, broadcastChannel }) => {
     const handleEditItem = (e, bc, item) => {
         e.preventDefault();
         console.log('in item edit handler');
-        setModelOpen(true);
+        setEditItemModalOpen(true);
         setItemEditing(item);
     }
 
-    const handleModalClose = () => {
-        setModelOpen(false);
+    /** @const handleEditModalClose */
+    const handleEditModalClose = () => {
+        setEditItemModalOpen(false);
         setItemEditing(null);
+    }
+
+    /** @const handleDeleteModalClose */
+    const handleDeleteModalClose = () => {
+        setEditItemModalOpen(false);
+        setDelItemModalOpen(null);
     }
     
     return (
@@ -66,7 +92,7 @@ const Items = ({ items, broadcastChannel }) => {
                                         size="2x" 
                                         className="trash-alt-icon" 
                                         icon={faTrashAlt} 
-                                        onClick={e => handleDeleteItem(e, broadcastChannel)}
+                                        onClick={e => handleDeleteItem(e, broadcastChannel, {name, name_slug})}
                                     />
                                 </button>
                                 <button className="ml-2">
@@ -82,15 +108,15 @@ const Items = ({ items, broadcastChannel }) => {
                 </div>
             ))}
             <Modal
-                isOpen={modelOpen}
-                onRequestClose={handleModalClose}
-                style={customStyles}
-                contentLabel="Edit Item"
+                isOpen={editItemModalOpen}
+                onRequestClose={handleEditModalClose}
+                style={modalEditItemStyles}
+                contentLabel="Editing Item"
             >
-                <h2 className="text-center">Edit Item</h2>
-                <hr/>
-                <form className="max-w-md mx-auto">
-                    <div className="md:flex">
+                <h2 className="text-center text-2xl">Editing {itemEditing && itemEditing.name}</h2>
+                <hr />
+                <form className="pt-3 pb-5 max-w-md mx-auto">
+                    <div className="md:auto">
                         <label 
                             htmlFor="name"
                             className="mt-2"
@@ -106,24 +132,67 @@ const Items = ({ items, broadcastChannel }) => {
                             value={itemEditing ? itemEditing.name : ''}
                             onChange={e => console.log(e)}
                         />
-                        <button 
-                            className='ml-10'
-                            onClick={e => handleEditItem(e, broadcastChannel)}
-                        >
-                            <FontAwesomeIcon 
-                                size="2x" 
-                                className="check-circle-icon" 
-                                icon={faCheckCircle} 
-                            />
-                        </button>
                     </div>
                 </form>
+                <hr className="pt-5" />
                 <div>
                     <button 
                         className="close-modal-btn float-left"
-                        onClick={handleModalClose}
+                        onClick={handleEditModalClose}
                     >
                         Close
+                    </button>
+                    <button 
+                        className='float-right'
+                        onClick={e => handleEditItem(e, broadcastChannel)}
+                    >
+                        <FontAwesomeIcon 
+                            size="2x" 
+                            className="check-circle-icon" 
+                            icon={faCheckCircle} 
+                        />
+                    </button>
+                </div>
+            </Modal>
+            <Modal
+                isOpen={delItemModalOpen}
+                onRequestClose={handleDeleteModalClose}
+                style={modalDelItemStyles}
+                contentLabel="Deleting Item"
+            >
+                <h2 className="text-center text-2xl">Deleting {itemDeleting && itemDeleting.name}</h2>
+                <hr />
+                <form className="pt-3 pb-5 max-w-md mx-auto">
+                    <div className="flex-auto">
+                        <label 
+                            htmlFor="name"
+                            className="mt-2"
+                        >
+                            Are you sure you want to delete this item?
+                        </label>
+                        <input className="ml-5" type="radio" id="yes" name="choice" value="y"/>
+                        <label htmlFor="yes">Yes</label>
+                        <input className="ml-5" type="radio" id="no" name="choice" value="n"/>
+                        <label htmlFor="no">No</label>
+                    </div>
+                </form>
+                <hr className="pt-5" />
+                <div>
+                    <button 
+                        className="close-modal-btn float-left"
+                        onClick={handleDeleteModalClose}
+                    >
+                        Close
+                    </button>
+                    <button 
+                        className='float-right'
+                        onClick={e => handleEditItem(e, broadcastChannel)}
+                    >
+                        <FontAwesomeIcon 
+                            size="2x" 
+                            className="check-circle-icon" 
+                            icon={faCheckCircle} 
+                        />
                     </button>
                 </div>
             </Modal>
