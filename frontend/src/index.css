@@ -2,7 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+button:focus {
+    outline:none;
+}
+
 .loader {
     text-align: center;
     margin-top: 50px;
+}
+
+.plus-icon {
+    color: green;
+}
+
+.trash-alt-icon {
+    color:  #ff033e;
 }
