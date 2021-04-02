@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import Modal from 'react-modal';
+import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
     faTrashAlt, 
     faPencilAlt,
     faCheckCircle
 } from '@fortawesome/free-solid-svg-icons';
+
+import API_ROUTES from '../api-routes';
 
 /** @const {object} modalEditItemStyles */
 const modalEditItemStyles = {
@@ -35,7 +38,11 @@ const modalDelItemStyles = {
 Modal.setAppElement('#root');
 
 /** @const {func} Items */
-const Items = ({ items, broadcastChannel }) => {
+const Items = ({ 
+    items, 
+    setItems, 
+    broadcastChannel, 
+}) => {
     const [editItemModalOpen, setEditItemModalOpen] = useState(false);
     const [delItemModalOpen, setDelItemModalOpen] = useState(false);
     const [deleteChoice, setDeleteChoice] = useState("n");
@@ -43,7 +50,7 @@ const Items = ({ items, broadcastChannel }) => {
     const [itemDeleting, setItemDeleting] = useState(null);
 
     /** 
-    * @const setItemEditingName 
+    * @const {func} setItemEditingName 
     * @param {string} name
     */
     const setItemEditingName = name => {
@@ -54,37 +61,101 @@ const Items = ({ items, broadcastChannel }) => {
     }
 
     /** 
-    * @const handleDeleteItem 
-    * @param {event} e
-    * @param {BroadcastChannel} bc
+    * @const {func} handleDeleteItem 
     * @param {item} item
     */
-    const handleDeleteItem = (e, bc, item) => {
-        console.log('in item delete handler');
+    const handleDeleteItem = item => {
         setItemDeleting(item);
         setDelItemModalOpen(true);
     }
 
     /** 
-    * @const handleEditItem 
-    * @param {event} e
-    * @param {BroadcastChannel} bc
+    * @const {func} handleEditItem 
     * @param {item} item
     */
-    const handleEditItem = (e, bc, item) => {
-        e.preventDefault();
-        console.log('in item edit handler');
+    const handleEditItem = item => {
         setEditItemModalOpen(true);
         setItemEditing(item);
     }
 
-    /** @const handleEditModalClose */
+    /** 
+     * @async
+     * @const {func} handleEditSubmit 
+     */
+    const handleEditSubmit = async () => {
+        const { name, name_slug } = itemEditing;
+        try {
+            const res = await axios.patch(
+                `${API_ROUTES.ITEM.ROOT}${API_ROUTES.ITEM.UPDATE.replace(':slug', name_slug)}`,
+                { name }
+            );
+            setItems(data => {                
+                for(const key in data) {
+                    if (name_slug === data[key].name_slug) {
+                        data[key].name_slug = res.data.name_slug;
+                        data[key].name = res.data.name;
+                    }
+                }
+
+                return [ ...data ];
+            });
+            setEditItemModalOpen(false);
+            setItemEditing(null);
+        } catch (err) {
+            console.log(err);
+            alert(JSON.stringify(err.response.data));
+            setEditItemModalOpen(false);
+            setItemEditing(null);
+            return;
+        }
+    }
+
+    /** 
+     * @async
+     * @const {func} handleDelSubmit 
+     */
+    const handleDelSubmit = async () => {
+        if (deleteChoice !== "y") {
+            setItemDeleting(null);
+            setDelItemModalOpen(false);
+            return;
+        }
+
+        const { name_slug } = itemDeleting;
+        try {
+            const res = await axios.delete(
+                `${API_ROUTES.ITEM.ROOT}${API_ROUTES.ITEM.DELETE.replace(':slug', name_slug)}`
+            );
+            if (res.status !== 200) {
+                alert(JSON.stringify(res.data));
+                setEditItemModalOpen(false);
+                setItemEditing(null);
+                return;
+            }
+            setItems(data => data.filter(({ name_slug: slug }) => {
+                if (name_slug === slug) {
+                    return false;
+                }
+                return true;
+            }));
+            setItemDeleting(null);
+            setDelItemModalOpen(false);
+        } catch (err) {
+            console.log(err);
+            alert(JSON.stringify(err.response.data));
+            setEditItemModalOpen(false);
+            setItemEditing(null);
+            return;
+        }
+    }
+
+    /** @const {func} handleEditModalClose */
     const handleEditModalClose = () => {
         setEditItemModalOpen(false);
         setItemEditing(null);
     }
 
-    /** @const handleDeleteModalClose */
+    /** @const {func} handleDeleteModalClose */
     const handleDeleteModalClose = () => {
         setEditItemModalOpen(false);
         setDelItemModalOpen(null);
@@ -105,7 +176,7 @@ const Items = ({ items, broadcastChannel }) => {
                                         size="2x" 
                                         className="trash-alt-icon" 
                                         icon={faTrashAlt} 
-                                        onClick={e => handleDeleteItem(e, broadcastChannel, {name, name_slug})}
+                                        onClick={() => handleDeleteItem({name, name_slug})}
                                     />
                                 </button>
                                 <button className="ml-2">
@@ -113,7 +184,7 @@ const Items = ({ items, broadcastChannel }) => {
                                         size="2x" 
                                         className="pencil-alt-icon" 
                                         icon={faPencilAlt} 
-                                        onClick={e => handleEditItem(e, broadcastChannel, {name, name_slug})}
+                                        onClick={() => handleEditItem({name, name_slug})}
                                     />
                                 </button>
                             </div>
@@ -157,7 +228,7 @@ const Items = ({ items, broadcastChannel }) => {
                     </button>
                     <button 
                         className='float-right'
-                        onClick={e => handleEditItem(e, broadcastChannel)}
+                        onClick={handleEditSubmit}
                     >
                         <FontAwesomeIcon 
                             size="2x" 
@@ -185,22 +256,20 @@ const Items = ({ items, broadcastChannel }) => {
                         </label>
                         <input 
                             onChange={e => setDeleteChoice(e.target.value, broadcastChannel)}
-                            value={deleteChoice}
+                            value="y"
                             className="ml-5" 
                             type="radio" 
                             id="yes" 
                             name="choice" 
-                            value="y"
                         />
                         <label htmlFor="yes">Yes</label>
                         <input 
                             onChange={e => setDeleteChoice(e.target.value, broadcastChannel)}
-                            value={deleteChoice}
+                            value="n"
                             className="ml-5" 
                             type="radio" 
                             id="no" 
                             name="choice" 
-                            value="n"
                         />
                         <label htmlFor="no">No</label>
                     </div>
@@ -215,7 +284,7 @@ const Items = ({ items, broadcastChannel }) => {
                     </button>
                     <button 
                         className='float-right'
-                        onClick={e => handleEditItem(e, broadcastChannel)}
+                        onClick={async () => handleDelSubmit()}
                     >
                         <FontAwesomeIcon 
                             size="2x" 
