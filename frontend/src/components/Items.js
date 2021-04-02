@@ -177,7 +177,6 @@ const Items = ({
                 itemDeleting={itemDeleting}
                 broadcastChannel={broadcastChannel}
                 handleDelSubmit={handleDelSubmit}
-                deleteChoice={deleteChoice}
                 setDeleteChoice={setDeleteChoice}
             />
         </div>

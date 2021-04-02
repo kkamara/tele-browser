@@ -23,7 +23,6 @@ const DelItem = ({
     itemDeleting,
     broadcastChannel,
     handleDelSubmit,
-    deleteChoice,
     setDeleteChoice,
 }) => (
     <Modal
