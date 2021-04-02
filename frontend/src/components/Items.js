@@ -38,8 +38,20 @@ Modal.setAppElement('#root');
 const Items = ({ items, broadcastChannel }) => {
     const [editItemModalOpen, setEditItemModalOpen] = useState(false);
     const [delItemModalOpen, setDelItemModalOpen] = useState(false);
+    const [deleteChoice, setDeleteChoice] = useState("n");
     const [itemEditing, setItemEditing] = useState(null);
     const [itemDeleting, setItemDeleting] = useState(null);
+
+    /** 
+    * @const setItemEditingName 
+    * @param {event} e
+    */
+    const setItemEditingName = name => {
+        setItemEditing({
+            name,
+            name_slug: itemEditing.name_slug,
+        });
+    }
 
     /** 
     * @const handleDeleteItem 
@@ -76,6 +88,7 @@ const Items = ({ items, broadcastChannel }) => {
     const handleDeleteModalClose = () => {
         setEditItemModalOpen(false);
         setDelItemModalOpen(null);
+        setDeleteChoice("n");
     }
     
     return (
@@ -130,7 +143,7 @@ const Items = ({ items, broadcastChannel }) => {
                             type="text" 
                             className="rounded text-pink-500 ml-10"
                             value={itemEditing ? itemEditing.name : ''}
-                            onChange={e => console.log(e)}
+                            onChange={e => setItemEditingName(e.target.value)}
                         />
                     </div>
                 </form>
@@ -170,9 +183,25 @@ const Items = ({ items, broadcastChannel }) => {
                         >
                             Are you sure you want to delete this item?
                         </label>
-                        <input className="ml-5" type="radio" id="yes" name="choice" value="y"/>
+                        <input 
+                            onChange={e => setDeleteChoice(e.target.value, broadcastChannel)}
+                            value={deleteChoice}
+                            className="ml-5" 
+                            type="radio" 
+                            id="yes" 
+                            name="choice" 
+                            value="y"
+                        />
                         <label htmlFor="yes">Yes</label>
-                        <input className="ml-5" type="radio" id="no" name="choice" value="n"/>
+                        <input 
+                            onChange={e => setDeleteChoice(e.target.value, broadcastChannel)}
+                            value={deleteChoice}
+                            className="ml-5" 
+                            type="radio" 
+                            id="no" 
+                            name="choice" 
+                            value="n"
+                        />
                         <label htmlFor="no">No</label>
                     </div>
                 </form>
