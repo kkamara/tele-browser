@@ -1,5 +1,7 @@
 import react, { Fragment } from 'react';
+
 import { APP_URL } from './constants';
+import Loader from './components/Loader';
 
 const handleButtonClick = (e, bc) => {
     console.log('in button click handler');
@@ -12,6 +14,7 @@ function App() {
 
     return (
         <Fragment>
+            <Loader />
             <button 
                 onClick={e => handleButtonClick(e, bc)}
                 className="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"

@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.loader {
+    text-align: center;
+    margin-top: 50px;
+}
