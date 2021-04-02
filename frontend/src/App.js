@@ -39,15 +39,6 @@ function App() {
         }
         fetchData();
     }, []);
-
-    /** 
-     * @const closeBCConnection 
-     * @param {event} e
-     * @param {BroadcastChannel} bc
-     */
-    const closeBCConnection = (e, bc) => {
-        bc.close();
-    };
     
     /** 
     * @const handleItemSubmit 
@@ -84,12 +75,6 @@ function App() {
 
     return (
         <Fragment>
-            <button 
-                onClick={e => closeBCConnection(e, bc)}
-                className="py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75"
-            >
-                Close connection
-            </button>
             <CreateItem
                 name={name}
                 setName={setName}
