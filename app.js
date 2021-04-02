@@ -53,7 +53,7 @@ router = express.Router();
 router.post('/items', async (req, res) => {
     const errors = await validate(req.body);
     if (errors.length) {
-        res.statusCode = 401;
+        res.statusCode = 400;
         return res.send(JSON.stringify({
             errors,
             message: 'Unsuccessful',
@@ -84,7 +84,7 @@ router.get('/items', async (req, res) => {
 router.patch('/items/:slug', async (req, res) => {
     const item = await get(req.params.slug);
     if (!item) {
-        res.statusCode = 401;
+        res.statusCode = 400;
         return res.send(JSON.stringify({
             error: 'Resource not found.',
             message: 'Unsuccessful',
@@ -94,7 +94,7 @@ router.patch('/items/:slug', async (req, res) => {
     const newSlug = slugify(req.body.name);
     const itemExists = await exists(newSlug);
     if (itemExists) {
-        res.statusCode = 401;
+        res.statusCode = 400;
         return res.send(JSON.stringify({
             error: `Item '${req.body.name}' already exists.`,
             message: 'Unsuccessful',
@@ -103,7 +103,7 @@ router.patch('/items/:slug', async (req, res) => {
 
     const errors = await validate(req.body);
     if (errors.length) {
-        res.statusCode = 401;
+        res.statusCode = 400;
         return res.send(JSON.stringify({
             errors,
             message: 'Unsuccessful',
@@ -128,7 +128,7 @@ router.patch('/items/:slug', async (req, res) => {
 router.delete('/items/:slug', async (req, res) => {
     const item = await get(req.params.slug);
     if (!item) {
-        res.statusCode = 401;
+        res.statusCode = 400;
         return res.send(JSON.stringify({
             error: 'Resource not found.',
             message: 'Unsuccessful',
