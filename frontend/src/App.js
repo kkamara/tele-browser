@@ -43,9 +43,8 @@ function App() {
     /** 
     * @const handleItemSubmit 
     * @param {event} e
-    * @param {BroadcastChannel} bc
     */
-    const handleItemSubmit = async (e, bc) => {
+    const handleItemSubmit = async e => {
         e.preventDefault();
         try {
             const res = await axios.post(
@@ -78,7 +77,7 @@ function App() {
             <CreateItem
                 name={name}
                 setName={setName}
-                handleItemSubmit={handleItemSubmit}
+                handleItemSubmit={async e => await handleItemSubmit(e)}
             />
             <Items 
                 items={data} 
