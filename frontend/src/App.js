@@ -93,7 +93,7 @@ function App() {
                     </button>
                 </div>
             </form>
-            <Items items={data} />
+            <Items items={data} broadcastChannel={bc} />
         </Fragment>
     );
 }
