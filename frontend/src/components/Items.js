@@ -1,41 +1,14 @@
 import { useState } from 'react';
-import Modal from 'react-modal';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
     faTrashAlt, 
     faPencilAlt,
-    faCheckCircle
 } from '@fortawesome/free-solid-svg-icons';
 
 import API_ROUTES from '../api-routes';
-
-/** @const {object} modalEditItemStyles */
-const modalEditItemStyles = {
-    content : {
-        top:'50%',
-        left:'50%',
-        right:'auto',
-        bottom:'auto',
-        marginRight:'-50%',
-        transform:'translate(-50%, -50%)'
-    }
-};
-
-/** @const {object} modalDelItemStyles */
-const modalDelItemStyles = {
-    content : {
-        width: 460,
-        top:'50%',
-        left:'50%',
-        right:'auto',
-        bottom:'auto',
-        marginRight:'-50%',
-        transform:'translate(-50%, -50%)'
-    }
-};
-
-Modal.setAppElement('#root');
+import EditItem from './EditItem';
+import DelItem from './DelItem';
 
 /** @const {func} Items */
 const Items = ({ 
@@ -191,109 +164,22 @@ const Items = ({
                         </div>
                 </div>
             ))}
-            <Modal
-                isOpen={editItemModalOpen}
-                onRequestClose={handleEditModalClose}
-                style={modalEditItemStyles}
-                contentLabel="Editing Item"
-            >
-                <h2 className="text-center text-2xl">Editing {itemEditing && itemEditing.name}</h2>
-                <hr />
-                <form className="pt-3 pb-5 max-w-md mx-auto">
-                    <div className="md:auto">
-                        <label 
-                            htmlFor="name"
-                            className="mt-2"
-                        >
-                            Name:
-                        </label>
-                        <input 
-                            minLength={3}
-                            maxLength={20}
-                            name="name" 
-                            type="text" 
-                            className="rounded text-pink-500 ml-10"
-                            value={itemEditing ? itemEditing.name : ''}
-                            onChange={e => setItemEditingName(e.target.value)}
-                        />
-                    </div>
-                </form>
-                <hr className="pt-5" />
-                <div>
-                    <button 
-                        className="close-modal-btn float-left"
-                        onClick={handleEditModalClose}
-                    >
-                        Close
-                    </button>
-                    <button 
-                        className='float-right'
-                        onClick={handleEditSubmit}
-                    >
-                        <FontAwesomeIcon 
-                            size="2x" 
-                            className="check-circle-icon" 
-                            icon={faCheckCircle} 
-                        />
-                    </button>
-                </div>
-            </Modal>
-            <Modal
-                isOpen={delItemModalOpen}
-                onRequestClose={handleDeleteModalClose}
-                style={modalDelItemStyles}
-                contentLabel="Deleting Item"
-            >
-                <h2 className="text-center text-2xl">Deleting {itemDeleting && itemDeleting.name}</h2>
-                <hr />
-                <form className="pt-3 pb-5 max-w-md mx-auto">
-                    <div className="flex-auto">
-                        <label 
-                            htmlFor="name"
-                            className="mt-2"
-                        >
-                            Are you sure you want to delete this item?
-                        </label>
-                        <input 
-                            onChange={e => setDeleteChoice(e.target.value, broadcastChannel)}
-                            value="y"
-                            className="ml-5" 
-                            type="radio" 
-                            id="yes" 
-                            name="choice" 
-                        />
-                        <label htmlFor="yes">Yes</label>
-                        <input 
-                            onChange={e => setDeleteChoice(e.target.value, broadcastChannel)}
-                            value="n"
-                            className="ml-5" 
-                            type="radio" 
-                            id="no" 
-                            name="choice" 
-                        />
-                        <label htmlFor="no">No</label>
-                    </div>
-                </form>
-                <hr className="pt-5" />
-                <div>
-                    <button 
-                        className="close-modal-btn float-left"
-                        onClick={handleDeleteModalClose}
-                    >
-                        Close
-                    </button>
-                    <button 
-                        className='float-right'
-                        onClick={async () => handleDelSubmit()}
-                    >
-                        <FontAwesomeIcon 
-                            size="2x" 
-                            className="check-circle-icon" 
-                            icon={faCheckCircle} 
-                        />
-                    </button>
-                </div>
-            </Modal>
+            <EditItem 
+                editItemModalOpen={editItemModalOpen}
+                handleEditModalClose={handleEditModalClose}
+                itemEditing={itemEditing}
+                setItemEditingName={setItemEditingName}
+                handleEditSubmit={handleEditSubmit}
+            />
+            <DelItem
+                delItemModalOpen={delItemModalOpen}
+                handleDeleteModalClose={handleDeleteModalClose}
+                itemDeleting={itemDeleting}
+                broadcastChannel={broadcastChannel}
+                handleDelSubmit={handleDelSubmit}
+                deleteChoice={deleteChoice}
+                setDeleteChoice={setDeleteChoice}
+            />
         </div>
     );
 };
