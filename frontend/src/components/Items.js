@@ -44,7 +44,7 @@ const Items = ({ items, broadcastChannel }) => {
 
     /** 
     * @const setItemEditingName 
-    * @param {event} e
+    * @param {string} name
     */
     const setItemEditingName = name => {
         setItemEditing({
