@@ -13,6 +13,7 @@ function App() {
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(true);
 
+    /** @const {BroadcastChannel} bc */
     const bc = new BroadcastChannel('test_channel');
     bc.onmessage = function (ev) { console.log(ev); }
 
@@ -37,8 +38,6 @@ function App() {
      * @param {BroadcastChannel} bc
      */
     const closeBCConnection = (e, bc) => {
-        console.log('in button click handler', e, bc);
-        // bc.postMessage('This is a test message.');
         bc.close();
     };
     

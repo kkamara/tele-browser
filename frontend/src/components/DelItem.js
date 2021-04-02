@@ -17,6 +17,7 @@ const modalDelItemStyles = {
     }
 };
 
+/** @const {func} DelItem */
 const DelItem = ({
     delItemModalOpen,
     handleDeleteModalClose,

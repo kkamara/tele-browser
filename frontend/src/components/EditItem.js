@@ -16,6 +16,7 @@ const modalEditItemStyles = {
     }
 };
 
+/** @const {func} EditItem */
 const EditItem = ({
     editItemModalOpen,
     handleEditModalClose,
