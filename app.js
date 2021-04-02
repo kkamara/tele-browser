@@ -102,7 +102,7 @@ router.patch('/items/:slug', async (req, res) => {
     const newItem = await update({
         name: req.body.name,
         name_slug: slugify(req.body.name),
-    }, req.params.name);
+    }, req.params.slug);
 
     return res.send(JSON.stringify(newItem));
 });
