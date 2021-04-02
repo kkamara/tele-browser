@@ -5,7 +5,6 @@ const CreateItem = ({
     name,
     setName,
     handleItemSubmit,
-    broadcastChannel,
 }) => (
     <form className="max-w-md mx-auto">
         <div className="md:flex">
@@ -26,7 +25,7 @@ const CreateItem = ({
             />
             <button 
                 className='ml-10'
-                onClick={async e => handleItemSubmit(e, broadcastChannel)}
+                onClick={async e => handleItemSubmit(e)}
             >
                 <FontAwesomeIcon size="2x" className="plus-icon" icon={faPlus} />
             </button>

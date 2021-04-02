@@ -22,7 +22,6 @@ const DelItem = ({
     delItemModalOpen,
     handleDeleteModalClose,
     itemDeleting,
-    broadcastChannel,
     handleDelSubmit,
     setDeleteChoice,
 }) => (
@@ -43,7 +42,7 @@ const DelItem = ({
                     Are you sure you want to delete this item?
                 </label>
                 <input 
-                    onChange={e => setDeleteChoice(e.target.value, broadcastChannel)}
+                    onChange={e => setDeleteChoice(e.target.value)}
                     value="y"
                     className="ml-5" 
                     type="radio" 
@@ -52,7 +51,7 @@ const DelItem = ({
                 />
                 <label htmlFor="yes">Yes</label>
                 <input 
-                    onChange={e => setDeleteChoice(e.target.value, broadcastChannel)}
+                    onChange={e => setDeleteChoice(e.target.value)}
                     value="n"
                     className="ml-5" 
                     type="radio" 
