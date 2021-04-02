@@ -108,6 +108,14 @@ router.patch('/items/:slug', async (req, res) => {
 });
 
 router.delete('/items/:slug', async (req, res) => {
+    const item = await get(req.params.slug);
+    if (!item) {
+        res.statusCode = 401;
+        return res.send(JSON.stringify({
+            error: 'Resource not found.',
+            message: 'Unsuccessful',
+        }));
+    }
     await del(req.params.slug);
     return res.send(JSON.stringify({ message: 'Success' }));
 });
