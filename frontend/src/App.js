@@ -46,9 +46,20 @@ function App() {
     * @param {event} e
     * @param {BroadcastChannel} bc
     */
-    const handleItemSubmit = (e, bc) => {
+    const handleItemSubmit = async (e, bc) => {
         e.preventDefault();
-        console.log('in item submit handler');
+        try {
+            const res = await axios.post(
+                `${API_ROUTES.ITEM.ROOT}${API_ROUTES.ITEM.CREATE}`,
+                { name }
+            );
+            setData(data => [ ...data, res.data ]);
+            setName("");
+        } catch (err) {
+            console.log(err);
+            alert(JSON.stringify(err.response.data));
+            setName("");
+        }
     }
 
     /** 
@@ -86,7 +97,7 @@ function App() {
                     />
                     <button 
                         className='ml-10'
-                        onClick={e => handleItemSubmit(e, bc)}
+                        onClick={async e => handleItemSubmit(e, bc)}
                     >
                         <FontAwesomeIcon size="2x" className="plus-icon" icon={faPlus} />
                     </button>
