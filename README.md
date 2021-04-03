@@ -6,7 +6,7 @@ With the system open in two (or more) browser windows and tabs; when a change is
 
 ## Usage
 
-Ensure you have ports 3000 and 3001 exposed.
+Ensure you have port `3000` exposed.
 
 ```bash
 cp .env.example .env
