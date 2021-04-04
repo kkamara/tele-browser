@@ -10,12 +10,14 @@ const name_slug = slugify(name);
 const new_name = `new test name ${Math.round(Math.random() * 100)}`;
 const new_name_slug = slugify(new_name);
 
+const apiHost = `${appConfig.appURL}:${appConfig.appPort}`;
+
 describe('testItem', function() { 
     describe('creating item', function() {
         it('api should return new item when saving item', async () => {
             try {
                 const res = await axios.post(
-                  `${appConfig.appURL}/api/items`, 
+                  `${apiHost}/api/items`, 
                   { name }
                 );
 
@@ -29,7 +31,7 @@ describe('testItem', function() {
     describe('reading item', function() {
         it('api should return list of all items', async () => {
             try {
-                const res = await axios.get(`${appConfig.appURL}/api/items`);
+                const res = await axios.get(`${apiHost}/api/items`);
 
                 let exists = false;
                 for (const { name_slug: slug } of res.data) {
@@ -51,7 +53,7 @@ describe('testItem', function() {
         it('api should return new values when updating item', async () => {
             try {
                 const res = await axios.patch(
-                    `${appConfig.appURL}/api/items/${name_slug}`,
+                    `${apiHost}/api/items/${name_slug}`,
                     { 
                         name: new_name,
                     }
@@ -70,7 +72,7 @@ describe('testItem', function() {
     describe('delete item', function() {
         it('api should remove object from db when deleting item', async () => {
             try {
-                const res = await axios.delete(`${appConfig.appURL}/api/items/${new_name_slug}`);
+                const res = await axios.delete(`${apiHost}/api/items/${new_name_slug}`);
                 assert.notStrictEqual(res.data, { message: 'success' });
             } catch(err) { 
                 throw err; 

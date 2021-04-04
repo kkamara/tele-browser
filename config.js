@@ -15,6 +15,7 @@ const appConfig = {
     appURL: process.env.APP_URL,
     appPort: process.env.APP_PORT,
     appLocale: process.env.APP_LOCALE,
+    testing: process.env.TESTING,
 };
 
 module.exports = { appConfig };
