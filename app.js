@@ -151,7 +151,7 @@ if (appConfig.nodeEnv === "production") {
 } else {
     const port = "3000";
     app.listen(port, () => {
-        const url = `http://127.0.0.1:${port}`;
+        const url = `${appConfig.appURL}:${appConfig.appPort}`;
         console.log(`Listening on ${url}`);
     });
 }

@@ -13,6 +13,7 @@ const appConfig = {
     nodeEnv: process.env.NODE_ENV,
     appDebug: process.env.APP_DEBUG,
     appURL: process.env.APP_URL,
+    appPort: process.env.APP_PORT,
     appLocale: process.env.APP_LOCALE,
 };
 
