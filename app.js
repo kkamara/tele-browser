@@ -150,10 +150,14 @@ router.delete('/items/:slug', async (req, res) => {
 app.use('/api', router);
 
 if (appConfig.nodeEnv === "production") {
-    app.listen(80);
+    app.listen(appConfig.appPort);
 } else {
     const port = "3000";
     app.listen(port, () => {
+        if (false === appConfig.testing) {
+            const open = require('open');
+            open(url);
+        }
         const url = `${appConfig.appURL}:${appConfig.appPort}`;
         console.log(`Listening on ${url}`);
     });
