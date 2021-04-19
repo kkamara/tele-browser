@@ -101,6 +101,11 @@ router.patch('/items/:slug', async (req, res) => {
     }
 
     const newSlug = slugify(req.body.name);
+
+    if (slugify(item.name_slug) === newSlug) {
+        return res.send(JSON.stringify(item));
+    }
+
     const itemExists = await exists(newSlug);
     if (itemExists) {
         res.statusCode = 400;
