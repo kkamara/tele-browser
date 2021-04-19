@@ -67,18 +67,20 @@ router.post('/items', async (req, res) => {
     }
 
     const name_slug = slugify(req.body.name);
-    const item = await save({
+    const saveItem = await save({
         name_slug,
         name: req.body.name,
     });
 
-    if (item === false) {
+    if (true !== saveItem) {
         res.statusCode = 500;
         res.send(JSON.stringify({
-            error: 'Error encountered when saving resource.'
+            message: 'Unsuccessful',
+            error: saveItem.message,
         }));
     }
-
+    
+    const item = get(name_slug);
     return res.send(JSON.stringify(item));
 });
 
@@ -124,19 +126,21 @@ router.patch('/items/:slug', async (req, res) => {
         }));
     }
 
-    const newItem = await update({
+    const updateItem = await update({
         name: req.body.name,
         name_slug: slugify(req.body.name),
     }, req.params.slug);
     
-    if (false === newItem) {
+    if (true !== updateItem) {
         res.statusCode = 500;
         return res.send(JSON.stringify({
-            error: 'Error encountered when saving resource.'
+            error: updateItem.message,
+            message: 'Unsuccessful',
         }));
     }
 
-    return res.send(JSON.stringify(newItem));
+    const updatedItem = get(name_slug);
+    return res.send(JSON.stringify(updatedItem));
 });
 
 router.delete('/items/:slug', async (req, res) => {

@@ -56,6 +56,7 @@ const get = async name_slug => {
 /** 
  * @const {function} save
  * @param {object} item
+ * @return true|Error
  */
 const save = async item => {
     const db = await openDb();
@@ -66,10 +67,9 @@ const save = async item => {
             name,
             name_slug
         );
-        return item;
+        return true;
     } catch (err) { 
-        console.log(err);
-        return false; 
+        return err; 
     }
 };
 
@@ -92,6 +92,7 @@ const getAll = async () => {
  * @const {function} update
  * @param {object} item
  * @param {str} original_name_slug
+ * @return true|Error
  */
 const update = async (item, original_name_slug) => {
     const db = await openDb();
@@ -103,12 +104,11 @@ const update = async (item, original_name_slug) => {
             original_name_slug
         );
         if (res.changes !== 1) {
-            return false;
+            return new Error('Error encountered when updating resource.');
         }
-        return item;
+        return true;
     } catch (err) { 
-        console.log(err);
-        return false; 
+        return err; 
     }
 };
 
