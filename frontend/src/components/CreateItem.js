@@ -25,7 +25,7 @@ const CreateItem = ({
             />
             <button 
                 className='ml-10'
-                onClick={async e => handleItemSubmit(e)}
+                onClick={async e => await handleItemSubmit(e)}
             >
                 <FontAwesomeIcon size="2x" className="plus-icon" icon={faPlus} />
             </button>

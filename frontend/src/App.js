@@ -77,7 +77,7 @@ function App() {
             <CreateItem
                 name={name}
                 setName={setName}
-                handleItemSubmit={async e => await handleItemSubmit(e)}
+                handleItemSubmit={handleItemSubmit}
             />
             <Items 
                 items={data} 
