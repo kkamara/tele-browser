@@ -1,7 +1,7 @@
 const { openDb } = require("../db");
 const slugify = require('slugify');
 
-/** 
+/**
  * @const {function} exists
  * @param {string} name_slug
  * @return {item|false}
@@ -15,13 +15,12 @@ const slugify = require('slugify');
     return res ? res : false;
 }
 
-/** 
+/**
  * @const {function} validate
  * @param {item} item
  * @return {string[]}
  */
 const validate = async item => {
-    const db = await openDb();
     const errors = [];
 
     if (!item.name) {
@@ -34,8 +33,8 @@ const validate = async item => {
         errors.push('The name field length must be less than 20 characters.');
     } else {
         try {
-            await exists(item.name_slug);
-            if (exists) {
+            const nameExists = await exists(item.name_slug);
+            if (nameExists) {
                 errors.push('The name field already exists.');
             }
         } catch (err) {}
@@ -44,7 +43,7 @@ const validate = async item => {
     return errors;
 }
 
-/** 
+/**
  * @const {function} get
  * @param {string} name_slug
  */
@@ -53,7 +52,7 @@ const get = async name_slug => {
     return await db.get('SELECT * FROM items WHERE name_slug = ? LIMIT 1', name_slug);
 };
 
-/** 
+/**
  * @const {function} save
  * @param {object} item
  * @return true|Error
@@ -68,8 +67,8 @@ const save = async item => {
             name_slug
         );
         return true;
-    } catch (err) { 
-        return err; 
+    } catch (err) {
+        return err;
     }
 };
 
@@ -79,7 +78,7 @@ const getAll = async () => {
     return await db.all('SELECT * FROM items;');
 };
 
-/** 
+/**
  * @const {function} del
  * @param {string} name_slug
  */
@@ -88,7 +87,7 @@ const getAll = async () => {
     return await db.run('DELETE FROM items WHERE name_slug = ?;', name_slug);
 };
 
-/** 
+/**
  * @const {function} update
  * @param {object} item
  * @param {str} original_name_slug
@@ -107,8 +106,8 @@ const update = async (item, original_name_slug) => {
             return new Error('Error encountered when updating resource.');
         }
         return true;
-    } catch (err) { 
-        return err; 
+    } catch (err) {
+        return err;
     }
 };
 

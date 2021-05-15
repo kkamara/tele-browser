@@ -1,8 +1,8 @@
 const { appConfig } = require("./config");
-const { 
-    validate, 
-    get, 
-    save, 
+const {
+    validate,
+    get,
+    save,
     getAll,
     del,
     update,
@@ -79,8 +79,8 @@ router.post('/items', async (req, res) => {
             error: saveItem.message,
         }));
     }
-    
-    const item = get(name_slug);
+
+    const item = await get(name_slug);
     return res.send(JSON.stringify(item));
 });
 
@@ -126,11 +126,12 @@ router.patch('/items/:slug', async (req, res) => {
         }));
     }
 
+    const new_slug = slugify(req.body.name);
     const updateItem = await update({
         name: req.body.name,
-        name_slug: slugify(req.body.name),
+        name_slug: new_slug,
     }, req.params.slug);
-    
+
     if (true !== updateItem) {
         res.statusCode = 500;
         return res.send(JSON.stringify({
@@ -139,8 +140,8 @@ router.patch('/items/:slug', async (req, res) => {
         }));
     }
 
-    const updatedItem = get(name_slug);
-    return res.send(JSON.stringify(updatedItem));
+    const newItem = await get(new_slug);
+    return res.send(JSON.stringify(newItem));
 });
 
 router.delete('/items/:slug', async (req, res) => {
@@ -161,8 +162,7 @@ app.use('/api', router);
 if (appConfig.nodeEnv === "production") {
     app.listen(appConfig.appPort);
 } else {
-    const port = "3000";
-    app.listen(port, () => {
+    app.listen(appConfig.appPort, () => {
         if (false === appConfig.testing) {
             const open = require('open');
             open(url);

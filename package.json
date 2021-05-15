@@ -4,9 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "(cd frontend && npm run build) && node app.js",
-    "test": "concurrently \"TESTING=true node app.js\" \"mocha tests\"",
-    "postinstall": "cd frontend && npm install"
+    "start": "node app.js",
+    "test": "concurrently \"TESTING=true node app.js\" \"mocha tests\""
   },
   "repository": {
     "type": "git",

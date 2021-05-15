@@ -1,7 +1,10 @@
-const parseEnvFile = require("dotenv").config();
 
-if (parseEnvFile.error) {
-    throw parseEnvFile.error;
+if (process.env.NODE_ENV !== "production") {
+    const parseEnvFile = require("dotenv").config();
+
+    if (parseEnvFile.error) {
+        throw parseEnvFile.error;
+    }
 }
 
 const appConfig = {
@@ -13,7 +16,7 @@ const appConfig = {
     nodeEnv: process.env.NODE_ENV,
     appDebug: process.env.APP_DEBUG,
     appURL: process.env.APP_URL,
-    appPort: process.env.APP_PORT,
+    appPort: process.env.PORT || process.env.APP_PORT || 3000,
     appLocale: process.env.APP_LOCALE,
     testing: process.env.TESTING,
 };

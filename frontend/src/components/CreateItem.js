@@ -8,22 +8,23 @@ const CreateItem = ({
 }) => (
     <form className="max-w-md mx-auto">
         <div className="md:flex">
-            <label 
+            <label
                 htmlFor="name"
                 className="mt-2"
             >
                 Name:
             </label>
-            <input 
+            <input
                 minLength={3}
                 maxLength={20}
-                name="name" 
-                type="text" 
+                name="name"
+                type="text"
                 className="rounded text-pink-500 ml-10"
                 onChange={e => setName(e.target.value)}
                 value={name}
+                style={styles.nameInputStyles}
             />
-            <button 
+            <button
                 className='ml-10'
                 onClick={async e => await handleItemSubmit(e)}
             >
@@ -32,5 +33,11 @@ const CreateItem = ({
         </div>
     </form>
 );
+
+const styles = {
+    nameInputStyles: {
+        border: '1px solid black',
+    },
+};
 
 export default CreateItem;
