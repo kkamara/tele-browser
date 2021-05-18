@@ -1,6 +1,6 @@
-const sqlite3 = require('sqlite3');
-const { open } = require('sqlite');
-const path = require('path');
+import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
+import path from 'path';
 
 const openDb = async () => {
     const db = await open({
@@ -10,10 +10,8 @@ const openDb = async () => {
 
     await db.migrate()
         .catch(err => console.log(err));
-    
+
     return db;
 };
 
-module.exports = {
-    openDb
-};
+export default openDb;
