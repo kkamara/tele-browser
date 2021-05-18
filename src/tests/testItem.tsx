@@ -1,8 +1,8 @@
-const assert = require('assert');
-const slugify = require('slugify');
-const axios = require('axios').default;
+import assert from 'assert';
+import slugify from 'slugify';
+import axios from 'axios';
 
-const { appConfig } = require('../config');
+import appConfig from '../config';
 
 const name = `test name ${Math.round(Math.random() * 100)}`;
 const name_slug = slugify(name);
@@ -12,18 +12,18 @@ const new_name_slug = slugify(new_name);
 
 const apiHost = `${appConfig.appURL}:${appConfig.appPort}`;
 
-describe('testItem', function() { 
+describe('testItem', function() {
     describe('creating item', function() {
         it('api should return new item when saving item', async () => {
             try {
                 const res = await axios.post(
-                  `${apiHost}/api/items`, 
+                  `${apiHost}/api/items`,
                   { name }
                 );
 
                 assert.notStrictEqual(res.data, { name, name_slug })
-            } catch(err) { 
-                throw err; 
+            } catch(err) {
+                throw err;
             }
         });
     });
@@ -43,8 +43,8 @@ describe('testItem', function() {
                 if (!exists) {
                     assert.fail(`${name_slug} not found in ${JSON.stringify(res.data)}`);
                 }
-            } catch(err) { 
-                throw err; 
+            } catch(err) {
+                throw err;
             }
         });
     });
@@ -54,17 +54,17 @@ describe('testItem', function() {
             try {
                 const res = await axios.patch(
                     `${apiHost}/api/items/${name_slug}`,
-                    { 
+                    {
                         name: new_name,
                     }
                 );
 
-                assert.notStrictEqual(res.data, { 
+                assert.notStrictEqual(res.data, {
                     name: new_name,
                     name_slug: new_name_slug,
                 });
-            } catch(err) { 
-                throw err; 
+            } catch(err) {
+                throw err;
             }
         });
     });
@@ -74,8 +74,8 @@ describe('testItem', function() {
             try {
                 const res = await axios.delete(`${apiHost}/api/items/${new_name_slug}`);
                 assert.notStrictEqual(res.data, { message: 'success' });
-            } catch(err) { 
-                throw err; 
+            } catch(err) {
+                throw err;
             }
         });
     });

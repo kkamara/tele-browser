@@ -1,5 +1,5 @@
-const { openDb } = require("../db");
-const slugify = require('slugify');
+import openDb from "../db";
+import slugify from 'slugify';
 
 /**
  * @const {function} exists
@@ -111,7 +111,7 @@ const update = async (item, original_name_slug) => {
     }
 };
 
-module.exports = {
+export {
     exists,
     validate,
     get,

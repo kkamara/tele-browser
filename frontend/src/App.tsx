@@ -1,4 +1,4 @@
-import { 
+import {
     Fragment,
     useState,
     useEffect,
@@ -16,12 +16,12 @@ function App() {
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(true);
 
-    /** 
+    /**
      * @const {BroadcastChannel} bc
      * @param {MessageEvent} event
      */
     const bc = new BroadcastChannel('test_channel');
-    bc.onmessage = function (event) { 
+    bc.onmessage = function (event) {
         setData(event.data);
     }
 
@@ -39,9 +39,9 @@ function App() {
         }
         fetchData();
     }, []);
-    
-    /** 
-    * @const handleItemSubmit 
+
+    /**
+    * @const handleItemSubmit
     * @param {event} e
     */
     const handleItemSubmit = async e => {
@@ -64,7 +64,7 @@ function App() {
         }
     }
 
-    /** 
+    /**
      * r e n d e r    a p p
      */
 
@@ -79,10 +79,10 @@ function App() {
                 setName={setName}
                 handleItemSubmit={handleItemSubmit}
             />
-            <Items 
-                items={data} 
+            <Items
+                items={data}
                 setItems={setData}
-                broadcastChannel={bc} 
+                broadcastChannel={bc}
             />
         </Fragment>
     );
